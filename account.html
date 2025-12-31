@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="dashboard-bg">
+
+<div class="form-container">
+    <h1>Create Account</h1>
+
+    <select id="account_type">
+        <option value="">-- Select Account Type --</option>
+        <option value="Savings">Savings</option>
+        <option value="Current">Current</option>
+    </select>
+
+    <button onclick="createAccount()">Create</button>
+
+    <p id="msg"></p>
+
+    <button onclick="window.location.href='/dashboard'">
+        Back to Dashboard
+    </button>
+</div>
+
+<script>
+function createAccount() {
+    const accountType = document.getElementById("account_type").value;
+    const msg = document.getElementById("msg");
+
+    if (!accountType) {
+        msg.innerText = "Please select account type";
+        return;
+    }
+
+    fetch("/api/account/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            account_type: accountType
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            msg.innerText = data.error;
+        } else {
+            msg.innerText = data.message;
+            msg.style.color = "green";
+
+            // Optional auto-redirect
+            setTimeout(() => {
+                window.location.href = "/dashboard";
+            }, 1500);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        msg.innerText = "Server error";
+    });
+}
+</script>
+
+</body>
+</html>

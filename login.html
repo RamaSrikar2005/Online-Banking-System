@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-bg">
+
+<div class="form-container">
+    <h1>Login</h1>
+    <input type="email" id="login_email" placeholder="Email">
+    <input type="password" id="login_password" placeholder="Password">
+    <button onclick="loginUser()">Login</button>
+    <p id="login_message"></p>
+    <p>Don’t have an account?
+        <a href="{{ url_for('register_page') }}">Register</a>
+    </p>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
