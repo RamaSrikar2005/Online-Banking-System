@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deactivate Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- 🔒 Protect page -->
+    <script>
+        if (!localStorage.getItem("user_id")) {
+            window.location.replace("/login");
+        }
+    </script>
+</head>
+
+<body class="dashboard-bg">
+
+<div class="form-container">
+    <h1>Deactivate Account</h1>
+
+    <input
+        type="number"
+        id="account_id"
+        placeholder="Enter Account ID"
+    >
+
+    <button onclick="deactivateAccount()">Deactivate</button>
+
+    <p id="msg"></p>
+
+    <button onclick="window.location.href='/dashboard'">
+        Back to Dashboard
+    </button>
+</div>
+
+<script>
+function deactivateAccount() {
+    const accountId = document.getElementById("account_id").value;
+    const msg = document.getElementById("msg");
+
+    if (!accountId) {
+        msg.innerText = "Please enter Account ID";
+        return;
+    }
+
+    fetch("/api/account/deactivate", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ account_id: accountId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        msg.innerText = data.message || data.error;
+    })
+    .catch(() => {
+        msg.innerText = "Server error";
+    });
+}
+</script>
+
+</body>
+</html>

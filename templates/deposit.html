@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deposit Money</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="login-bg">
+
+<div class="form-container">
+    <h1>Deposit</h1>
+
+    <input type="number" id="deposit_account" placeholder="Account ID" required>
+    <input type="number" id="deposit_amount" placeholder="Amount" required>
+
+    <button onclick="depositMoney()">Deposit</button>
+
+    <p id="deposit_message"></p>
+
+    <button onclick="window.location.href='/dashboard'">Back</button>
+</div>
+
+<script>
+function depositMoney() {
+    const accountId = document.getElementById("deposit_account").value;
+    const amount = document.getElementById("deposit_amount").value;
+
+    if (!accountId || !amount) {
+        document.getElementById("deposit_message").innerText =
+            "All fields are required";
+        return;
+    }
+
+    if (!confirm(`Confirm deposit of ₹${amount}?`)) {
+        return;
+    }
+
+    fetch("/api/account/deposit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            account_id: accountId,
+            amount: amount
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("deposit_message").innerText =
+            data.message || data.error;
+
+        if (!data.error) {
+            setTimeout(() => {
+                window.location.href = "/dashboard";
+            }, 1000);
+        }
+    });
+}
+</script>
+
+</body>
+</html>
